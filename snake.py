@@ -17,18 +17,9 @@ high_score = 0
 
 class Cube():
   def __init__(self, color, x, y):
-    self.surf = pygame.Surface((step_x - offset, step_y - offset)) #sets a cube surface with width and height of step
+    self.surf = pygame.Surface((step_x - offset, step_y - offset))
     self.surf.fill(color) #fills the cube wih the desired color
-    self.rect = self.surf.get_rect(topleft = (x + offset, y + offset)) #creates a rect object at coordinates x, y
-    
-  #cube rects only ever get manipulated using the top and left sides of the rect
-  #move function takes in a new position value and a direction (up, down, left or right) which is a char
-  #depending on the direction the position is added/subtracted from the top or left position of the rect
-  def move(self, newPos, dir):
-    if(dir == 0 or dir == 1):
-      self.rect.top += newPos
-    else:
-      self.rect.left += newPos
+    self.rect = self.surf.get_rect(topleft = (x + offset, y + offset))
 
 class Snake():
   def __init__(self):
@@ -64,7 +55,6 @@ class Snake():
     c = Cube(BODY_C, x, y) 
     self.body.append(c)
 
-  
   #direction denotes snake movement direction (0, 1, 2, 3)->(up, down, left, right)
   def move(self, game_state):
     #store original coord of head
@@ -169,7 +159,17 @@ def game_over(screen):
 
   screen.blit(msg, msg_rect)
 
+def update_high_score():
+  f = open("highscores.txt", "r")
+  record = int(f.read())
+  f.close()
+  if high_score > record:
+    writer = open("highscores.txt", "w")
+    writer.write(f"{high_score}")
+    writer.close()
+
 def exitGame():
+  update_high_score()
   pygame.quit() #quits the game
   sys.exit() #exits while loop and terminates game
   
@@ -182,6 +182,10 @@ def main():
   #loads font and sets size to 32
   global game_font
   game_font = pygame.font.Font('./fonts/BebasNeue-Regular.ttf', 32) 
+  _file = open("highscores.txt", "r")
+  global high_score
+  high_score = int(_file.read())
+  _file.close()
   WHITE = (255, 255, 255) #grid color
   
   #game vars
@@ -243,6 +247,7 @@ def main():
       screen.blit(food.surf, food.rect)
     else: #game over screen
       scores_display(score, high_score, screen)
+      update_high_score()
       game_over(screen)
 
     pygame.display.update()
