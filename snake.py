@@ -49,17 +49,18 @@ class Snake():
       elif self.direction == 1:
         y -= step_y
       elif self.direction == 2:
-        x -= step_x
-      else:
         x += step_x
-    elif(self.body[-2].rect.top < tail.rect.top): #tail is directly below next segment
+      else:
+        x -= step_x
+    elif(self.body[-2].rect.top < tail.rect.top): #tail is below 2nd to last segment
       y += step_y
-    elif(self.body[-2].rect.top > tail.rect.top): #directly above next segment
+    elif(self.body[-2].rect.top > tail.rect.top): #directly above 2nd to last segment
       y -= step_y
-    elif(self.body[-2].rect.left < tail.rect.left): #tail is right of the next segment
+    elif(self.body[-2].rect.left < tail.rect.left): #right of 2nd to last segment
       x += step_x
-    else: #tail is left of next segment
+    else: #tail is left of 2nd to last segment
       x -= step_x
+
     c = Cube(BODY_C, x, y) 
     self.body.append(c)
 
